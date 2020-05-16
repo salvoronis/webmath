@@ -6,7 +6,6 @@ import(
   "fmt"
   "math"
   "strconv"
-  //"os"
   "errors"
 )
 
@@ -21,6 +20,7 @@ func MainPage(w http.ResponseWriter, r *http.Request){
     leftString := r.FormValue("right")
     rightString := r.FormValue("left")
     var f func(float64) float64
+    var fs []func(float64) float64
     error, left, right := formatData(errorString, leftString, rightString)
 
     if method == "secant" || method == "fixedPoint" {
@@ -34,15 +34,23 @@ func MainPage(w http.ResponseWriter, r *http.Request){
       case "4":
         f = fourth
       }
+      var answer float64 = 0.0
+      switch method {
+      case "secant":
+        answer = secant(error, left, right, f)
+      case "fixedPoint":
+        answer = fixedPoint(error, left, right, f)
+      }
+      fmt.Fprint(w,answer)
+    }else{
+      switch function {
+      case "5":
+        fs = ([]func(float64) float64{systemOne,systemTwo})
+      case "6":
+        fs = []func(float64) float64{systemThree,systemFour}
+      }
+      fixedPointSys(error,left,right,fs)
     }
-    var answer float64 = 0.0
-    switch method {
-    case "secant":
-      answer = secant(error, left, right, f)
-    case "fixedPoint":
-      answer = fixedPoint(error, left, right, f)
-    }
-    fmt.Fprint(w,answer)
   }
 }
 
@@ -77,6 +85,26 @@ func secant(Uerror, a, b float64, f func(float64) float64) float64{
   return x
 }
 
+func fixedPointSys(error, a, b float64, f []func(float64) float64){
+  x0, y0 := a, a
+  var x,y,d1,d2,n float64 = 1,1,1,1,0
+  for math.Abs(d1)>error && math.Abs(d2)>error {
+    x = f[0](y0)
+    y = f[1](x0)
+    d1 = f[0](y) - x
+    d2 = f[1](x) + y
+    x0 = x;
+    y0 = y;
+    n++
+    if n > 1000 || x >= b {
+      break
+    }
+  }
+  fmt.Println(n)
+  fmt.Println(x)
+  fmt.Println(y)
+}
+
 //finally it's fucking works
 func fixedPoint(error, a, b float64, f func(float64) float64) float64{
   n := 0
@@ -94,10 +122,6 @@ func fixedPoint(error, a, b float64, f func(float64) float64) float64{
 
 func pizdocPoint(x float64) float64{
   return x-0.003*second(x)
-}
-
-func suka(x float64) float64{
-  return x-0.003*third(x)
 }
 
 func calculateError(a,b,e float64) (int, float64, error) {

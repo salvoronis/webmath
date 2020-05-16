@@ -73,16 +73,22 @@
     <div id="fixedPointSys" class="tabcontent">
       <form id="form">
         <input type="hidden" name="type" value="fixedPointSys">
-        <label>1: $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$$</label>
-        <label>2: $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$$</label>
-        <label>3: $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$$</label>
-        <label>4: $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$$</label>
+        <label>1:
+          $$\begin{cases}
+          x+y-3=0 \\
+          x^{2}+y^{2}-9=0
+          \end{cases}$$
+        </label>
+        <label>2:
+          $$\begin{cases}
+          x^{2}+1-y=0 \\
+          x-y+1=0
+          \end{cases}$$
+        </label>
         <select name="function">
           <label for="select">Выберите функцию</label>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
+          <option value="5">1</option>
+          <option value="6">2</option>
         </select>
         <label for="error">Error</label>
         <input type="text" name="error" placeholder="error">
@@ -90,7 +96,7 @@
         <input type="text" name="error" placeholder="error">
         <label for="error">Правая граница</label>
         <input type="text" name="error" placeholder="error">
-        <button type="submit" class="solve">Решить</button>
+        <button type="submit" id="sys">Решить</button>
         <p class="answer"></p>
       </form>
     </div>

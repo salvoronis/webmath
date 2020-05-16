@@ -3,7 +3,7 @@ var f, curve; // global objects
 board = JXG.JSXGraph.initBoard('jxgbox', {
     boundingbox: [-5, 5, 5, -5], axis:true
 });
-var p = board.create('point',[-3,1]);
+var p = board.create('point',[-3,1],{fixed:true});
 function plot(graph){
   f = board.jc.snippet(graph, true, 'x', true);
   curve = board.create('functiongraph',[f,
@@ -61,6 +61,14 @@ $(".tabcontent").on("submit", function(event){
       break;
     case "4":
       plot("1/(x^(0.5))")
+      break;
+    case "5":
+      plot("-x+3");
+      plot("sqrt(-x*x+9)");
+      break;
+    case "6":
+      plot("x*x+1");
+      plot("x+1");
       break;
   }
   $.ajax({
