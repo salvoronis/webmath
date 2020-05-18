@@ -3,7 +3,7 @@ var f, curve; // global objects
 board = JXG.JSXGraph.initBoard('jxgbox', {
     boundingbox: [-5, 5, 5, -5], axis:true
 });
-var p = board.create('point',[-3,1],{fixed:true});
+//var p = board.create('point',[-3,1],{fixed:true});
 function plot(graph){
   f = board.jc.snippet(graph, true, 'x', true);
   curve = board.create('functiongraph',[f,
@@ -23,6 +23,10 @@ function clearAll() {
   board = JXG.JSXGraph.initBoard('jxgbox', {boundingbox:[-5, 5, 5, -5], axis:true});
   f = null;
   curve = null;
+}
+
+function doDot(x,y){
+  var p = board.create('point',[parseFloat(x),parseFloat(y)],{fixed:true});
 }
 
 
@@ -51,7 +55,7 @@ $(".tabcontent").on("submit", function(event){
   var type = $(this).find("input[name='type']").val();
   switch (f) {
     case "1":
-      plot("x*x-log(x)-2*cos(x)-1");
+      plot("log(x)");
       break;
     case "2":
       plot("x*x*x-2*x-11");
@@ -60,15 +64,17 @@ $(".tabcontent").on("submit", function(event){
       plot("x*x-15")
       break;
     case "4":
-      plot("1/(x^(0.5))")
+      plot("1/(x^(0.5))-0.5")
       break;
     case "5":
-      plot("-x+3");
-      plot("sqrt(-x*x+9)");
+      plot("sin(x)");
+      plot("(x-2)^(1/2)");
+      plot("-(x-2)^(1/2)");
       break;
     case "6":
-      plot("x*x+1");
-      plot("x+1");
+      plot("sin(x)");
+      plot("(4-x)^(1/3)");
+      plot("-(-4+x)^(1/3)");
       break;
   }
   $.ajax({
@@ -78,7 +84,9 @@ $(".tabcontent").on("submit", function(event){
     type: 'post',
     success: function(res){
       console.log(res);
-      $(".answer").text(res);
+      var answers = res.split(";");
+      doDot(answers[0],answers[1]);
+      $(".answer").text("x: "+answers[0]+" y: "+answers[1]);
     }
   });
 });

@@ -6,7 +6,6 @@ import(
   "fmt"
   "math"
   "strconv"
-  "errors"
 )
 
 func MainPage(w http.ResponseWriter, r *http.Request){
@@ -41,7 +40,7 @@ func MainPage(w http.ResponseWriter, r *http.Request){
       case "fixedPoint":
         answer = fixedPoint(error, left, right, f)
       }
-      fmt.Fprint(w,answer)
+      fmt.Fprint(w,fmt.Sprintf("%f;0.0",answer))
     }else{
       switch function {
       case "5":
@@ -49,7 +48,8 @@ func MainPage(w http.ResponseWriter, r *http.Request){
       case "6":
         fs = []func(float64) float64{systemThree,systemFour}
       }
-      fixedPointSys(error,left,right,fs)
+      x,y := fixedPointSys(error,left,right,fs)
+      fmt.Fprint(w,fmt.Sprintf("%f;%f",x,y))
     }
   }
 }
@@ -85,24 +85,17 @@ func secant(Uerror, a, b float64, f func(float64) float64) float64{
   return x
 }
 
-func fixedPointSys(error, a, b float64, f []func(float64) float64){
-  x0, y0 := a, a
-  var x,y,d1,d2,n float64 = 1,1,1,1,0
-  for math.Abs(d1)>error && math.Abs(d2)>error {
-    x = f[0](y0)
-    y = f[1](x0)
-    d1 = f[0](y) - x
-    d2 = f[1](x) + y
-    x0 = x;
-    y0 = y;
-    n++
-    if n > 1000 || x >= b {
-      break
-    }
+func fixedPointSys(error, a, b float64, f []func(float64) float64) (float64, float64){
+  var x0, y0, d1, d2 float64 = 0.2,0.2,1.0,1.0
+  i := 0
+  var x, y float64
+  for {
+    x,y = f[0](y0), f[1](x0)
+    d1, d2 = f[0](x)-x, y-f[1](y)
+    x0,y0,i = x,y, i+1
+    if !(math.Abs(d1)>error && math.Abs(d2)>error && i < 10000) {break}
   }
-  fmt.Println(n)
-  fmt.Println(x)
-  fmt.Println(y)
+  return x,y
 }
 
 //finally it's fucking works
@@ -118,20 +111,6 @@ func fixedPoint(error, a, b float64, f func(float64) float64) float64{
     n++
   }
   return x
-}
-
-func pizdocPoint(x float64) float64{
-  return x-0.003*second(x)
-}
-
-func calculateError(a,b,e float64) (int, float64, error) {
-  if e == 0.0 {
-    return 0, 0, errors.New("Деление на 0 или символы")
-  }
-  floatN := (b-a)/math.Pow(e, 0.25)
-  n := int(math.Ceil(floatN))
-  newerr := math.Pow(((b-a)/float64(n)),4)
-  return n, newerr, nil
 }
 
 func formatData(error, left, right string) (float64,float64,float64) {

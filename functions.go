@@ -3,7 +3,7 @@ package main
 import "math"
 
 func first(x float64) float64{
-  return x*x+math.Log(x)-(2*math.Cos(x))-1
+  return /*x*x+math.Log10(x)-(2*math.Cos(x))-1*/math.Log(x)
 }
 
 func second(x float64) float64{
@@ -15,17 +15,17 @@ func third(x float64) float64{
 }
 
 func fourth(x float64) float64{
-  return 1/(math.Sqrt(x))
+  return (1/(math.Sqrt(x)))-0.5
 }
-func systemOne(y float64) float64{
-  return -y+3
+func systemOne(x float64) float64{
+  return x*x+2
 }
 func systemTwo(x float64) float64{
-  return math.Sqrt(-x*x+9)
+  return math.Sin(x)
 }
 func systemFour(x float64) float64{
-  return x*x+1
+  return math.Sin(x)
 }
-func systemThree(y float64) float64{
-  return y-1
+func systemThree(x float64) float64{
+  return -(x*x*x)+4
 }
