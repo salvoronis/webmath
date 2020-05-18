@@ -8,9 +8,10 @@ import(
   "strconv"
 )
 
+var t = template.Must(template.ParseFiles("./template/main.html"))
+
 func MainPage(w http.ResponseWriter, r *http.Request){
   if r.Method == "GET" {
-    t := template.Must(template.ParseFiles("./template/main.html"))
     t.Execute(w,nil)
   } else if r.Method == "POST" {
     var method string = r.FormValue("type")
